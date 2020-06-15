@@ -8,15 +8,23 @@ import LoginPage from "views/LoginPage/LoginPage.js";
 import axios from "axios"
 import BillGen from "./views/BillGen/BillGen"
 import TrackOrder from "views/TrackOrder/TrackOrder"
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import thunk from 'redux-thunk';
+import rootReducer from "./store/reducers/index";
+import viewQuiz from "./store/reducers/ViewQuiz"
 var hist = createBrowserHistory();
 axios.defaults.headers.common['Authorization'] = "Basic dGVzdEBnbWFpbC5jb20gdGVzdDEyMzp0ZXN0MTIzNDV0c3QxMjM=";
+const store = createStore(rootReducer, applyMiddleware(thunk));
 ReactDOM.render(
-  <Router history={hist}>
-    <Switch>
-      <Route exact path="/trackOrder" component={TrackOrder} />
-      <Route exact path="/" component={LandingPage} />
-
-    </Switch>
-  </Router>,
+  <Provider store={store}>
+    <Router history={hist}>
+      <Switch>
+        <Route exact path="/trackOrder" component={TrackOrder} />
+        <Route exact path="/" component={LandingPage} />
+      </Switch>
+    </Router>
+  </Provider>
+  ,
   document.getElementById("root")
 );

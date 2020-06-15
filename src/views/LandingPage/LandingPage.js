@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
@@ -30,15 +30,22 @@ export default function LandingPage(props) {
   const [filter, setFilter] = React.useState(drop_down[0])
   const classes = useStyles();
   const { ...rest } = props;
+  const [orderedFood, setOrderedFood] = useState([]);
 
-
+  const AddCart = (serve) => {
+    let a = orderedFood;
+    a.push(serve)
+    setOrderedFood(a)
+    console.log("length", orderedFood)
+  }
+  React.useEffect(()=>{},[orderedFood])
   return (
     <div>
       <Header
         color="transparent"
         routes={dashboardRoutes}
         brand="Food x Wood"
-        rightLinks={<HeaderLinks />}
+        rightLinks={<HeaderLinks cartCounter={orderedFood.length}/>}
         fixed
         changeColorOnScroll={{
           height: 400,
@@ -89,7 +96,7 @@ export default function LandingPage(props) {
           </GridContainer>
           <GridContainer style={{ marginTop: "20px" }}>
             <GridItem xs={12} sm={12} md={3}>
-              <HomeCards />
+              <HomeCards AddCart={AddCart} />
             </GridItem>
             <GridItem xs={12} sm={12} md={3}>
               <HomeCards />

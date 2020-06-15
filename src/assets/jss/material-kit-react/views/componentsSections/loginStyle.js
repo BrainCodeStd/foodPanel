@@ -14,7 +14,7 @@ const loginStyle = {
     border: "0",
     display: "flex",
     alignItems: "center",
-    backgroundImage: "url(" + image + ")"
+    // backgroundImage: "url(" + image + ")"
   },
   section1: {
     minHeight: "110vh",

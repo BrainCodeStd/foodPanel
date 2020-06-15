@@ -39,6 +39,8 @@ function HeaderLinks(props) {
     setAnchorEl(null);
     props.filterBy(val)
   };
+  React.memo(() => props.cartCounter, [props.cartCounter])
+  console.log("AA", props.cartCounter)
   return (
     <List className={classes.list}>
       <ListItem className={classes.listItem}>
@@ -65,7 +67,7 @@ function HeaderLinks(props) {
           classes={{ tooltip: classes.tooltip }}
         >
           <Button
-            href="/trackOrder"
+            onClick={() => props.history.push("/trackOrder")}
             color="transparent"
             className={classes.navLink}
           >
@@ -87,7 +89,7 @@ function HeaderLinks(props) {
             color="transparent"
             className={classes.navLink}
           >
-            <Badge badgeContent={4} color="primary">
+            <Badge badgeContent={props.cartCounter ? props.cartCounter : 0} color="primary">
               <ShoppingCartIcon />
             </Badge>
           </Button>
