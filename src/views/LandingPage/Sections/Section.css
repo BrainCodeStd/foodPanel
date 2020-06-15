@@ -1,0 +1,35 @@
+#container {
+    display: inline-block;
+    /* margin: 20px;     */
+    overflow: hidden;
+    /* clip the excess when child gets bigger than parent */
+}
+
+#container img {
+    display: block;
+    transition: transform .4s;
+    /* smoother zoom */
+}
+
+#container:hover img {
+    transform: scale(1.1);
+    transform-origin: 50% 50%;
+}
+
+.content {
+    align-items: center;
+}
+
+.content, p, h4 {
+    padding: 0;
+    margin: 0;
+}
+
+.content p {
+    color: darkgray;
+}
+
+.content h4 {
+    color: black;
+    font-weight: bolder;
+}
