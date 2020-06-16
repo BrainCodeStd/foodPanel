@@ -29,6 +29,7 @@ import { withRouter } from "react-router-dom";
 const useStyles = makeStyles(styles);
 import { connect } from "react-redux";
 import { drop_down } from "../../assets/constants/Drop"
+
 function HeaderLinks(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -53,7 +54,7 @@ function HeaderLinks(props) {
         >
           <Button
             onClick={() => {
-              props.history.push("/")             
+              props.history.push("/menu")             
             }}
             color="transparent"
             className={classes.navLink}

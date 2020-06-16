@@ -51,7 +51,11 @@ export default function LandingPage(props) {
   }
 
   React.useEffect(() => {
-    fetchToday()
+    if (props.fetchAll) {
+      fetchAll()
+    } else {
+      fetchToday()
+    }
   }, [])
   return (
     <div>

@@ -20,6 +20,7 @@ ReactDOM.render(
     <Router history={hist}>
       <Switch>
         <Route exact path="/trackOrder" component={TrackOrder} />
+        <Route exact path="/menu" component={() => <LandingPage fetchAll={true} />} />
         <Route exact path="/" component={LandingPage} />
       </Switch>
     </Router>
