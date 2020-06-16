@@ -31,16 +31,21 @@ function SectionLogin(props) {
         let forServingAmount = serve / props.data.menu.serves;
         let amount = forServingAmount * (+props.data.menu.price)
         let payload = {
-            food_id: props.data.menu._id,
-            name: props.data.menu.foodName,
-            serves: serve,
-            amount: amount,
-            discount: props.data.menu.discount
+            order: {
+                food_id: props.data.menu._id,
+                name: props.data.menu.foodName,
+                serves: serve,
+                amount: amount,
+                discount: props.data.menu.discount
+            },
+            total: amount,
+            discount: props.data.menu.discount,
+            people: +serve
         }
         props.addOrder(payload);
 
     }
-    console.log(props.orders)
+    console.log(props.orders, props.total, props.people);
     return (
         <div>
             <div >
@@ -86,7 +91,9 @@ function SectionLogin(props) {
 }
 const mapStateToProps = state => {
     return {
-        orders: state.orderedFoods
+        orders: state.orderedFoods,
+        total: state.total,
+        people: state.people
     }
 }
 const mapDispatchToProps = dispatch => {

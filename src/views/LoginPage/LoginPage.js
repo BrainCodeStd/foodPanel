@@ -20,7 +20,7 @@ import CardFooter from "components/Card/CardFooter.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import styles from "assets/jss/material-kit-react/views/loginPage.js";
 import image from "assets/img/bg7.jpg";
-import { login } from "../../api/api";
+
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import { toast } from 'react-toastify';
 const useStyles = makeStyles(styles);
@@ -46,14 +46,7 @@ export default function LoginPage(props) {
       email: "admin@example.com",
       password: "admin"
     }
-    login(obj).then(res => {
-      if (res.data && res.data.success) {
-        props.history.push("/landing-page");
-      } else {
-
-        alert("Please Enter the correct Credentials!!")
-      }
-    })
+    
   }
   const classes = useStyles();
   const notify = () => {

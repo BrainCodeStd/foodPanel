@@ -52,7 +52,9 @@ function HeaderLinks(props) {
           classes={{ tooltip: classes.tooltip }}
         >
           <Button
-            onClick={props.fetchAll}
+            onClick={() => {
+              props.history.push("/")             
+            }}
             color="transparent"
             className={classes.navLink}
           >
