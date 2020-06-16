@@ -235,7 +235,7 @@ export default function LandingPage(props) {
         setActiveStep(0);
     };
     const findOrder = () => {
-        if(!id.length) return true
+        if (!id.length) return true
         let params = {
             orderID: id
         }
