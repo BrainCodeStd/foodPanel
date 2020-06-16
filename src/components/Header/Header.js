@@ -60,7 +60,10 @@ export default function Header(props) {
     [classes.absolute]: absolute,
     [classes.fixed]: fixed
   });
-  const brandComponent = <Button className={classes.title} onClick={() => props.history.push("/")}>{brand}</Button>;
+  const brandComponent = <Button className={classes.title} onClick={() => {
+    props.history.push("/")
+    props.fetchToday()
+  }}>{brand}</Button>;
   return (
     <AppBar className={appBarClasses}>
       <Toolbar className={classes.container}>

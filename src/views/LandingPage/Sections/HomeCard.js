@@ -15,6 +15,7 @@ import Button from "components/CustomButtons/Button.js";
 import styles from "assets/jss/material-kit-react/views/componentsSections/loginStyle.js";
 import "./Section.css"
 import { addTodo } from "../../../store/actions"
+import * as actionTypes from "../../../store/actionConstants/index";
 import { connect } from 'react-redux'
 const useStyles = makeStyles(styles);
 
@@ -27,10 +28,19 @@ function SectionLogin(props) {
             setError(true);
             return
         }
-        console.log(props)
-        // props.dispatch(addTodo(serve))
-    }
+        let forServingAmount = serve / props.data.menu.serves;
+        let amount = forServingAmount * (+props.data.menu.price)
+        let payload = {
+            food_id: props.data.menu._id,
+            name: props.data.menu.foodName,
+            serves: serve,
+            amount: amount,
+            discount: props.data.menu.discount
+        }
+        props.addOrder(payload);
 
+    }
+    console.log(props.orders)
     return (
         <div>
             <div >
@@ -38,11 +48,16 @@ function SectionLogin(props) {
                     <GridItem xs={12} sm={12} md={12}>
                         <div className="content">
                             <div id="container">
-                                <img width="250px" height="200px" src="https://i.pinimg.com/originals/29/73/7b/29737b8c90b655105668c79f5e23c743.jpg" alt="food Image" />
+                                <img width="250px" height="200px" src={`${props.data && props.data.menu.image}`} alt="food Image" />
                             </div>
-                            <div className="ribbon2">upto 50% off</div>
-                            <h4 >Pasta</h4>
-                            <p>Very delicious food</p>
+                            {
+
+                                props.data && props.data.menu.discount ?
+                                    <div className="ribbon2">upto {props.data && props.data.menu.discount}% off</div>
+                                    : null
+                            }
+                            <h4 >{props.data && props.data.menu.foodName}</h4>
+                            <p>It serves {props.data && props.data.menu.serves} persons</p>
                             <GridContainer justify="center">
                                 <GridItem xs={12} sm={12} md={6}>
                                     <form>
@@ -69,5 +84,15 @@ function SectionLogin(props) {
         </div>
     );
 }
+const mapStateToProps = state => {
+    return {
+        orders: state.orderedFoods
+    }
+}
+const mapDispatchToProps = dispatch => {
+    return {
+        addOrder: (payload) => dispatch({ type: actionTypes.ADD_TO_CART, payload: payload })
+    }
+}
 
-export default connect()(SectionLogin)
+export default connect(mapStateToProps, mapDispatchToProps)(SectionLogin)

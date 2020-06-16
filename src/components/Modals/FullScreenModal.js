@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -14,6 +14,15 @@ import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import ReactTable from 'react-table-6';
 import 'react-table-6/react-table.css';
+import { makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import { connect } from 'react-redux';
 const useStyles = makeStyles((theme) => ({
     appBar: {
         position: 'relative',
@@ -26,195 +35,24 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
+    return <Slide direction="down" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog(props) {
+function FullScreenDialog(props) {
     const classes = useStyles();
     let { data } = props;
-    const columns = [
-        {
-            Header: props => <span style={{ color: 'black' }}>Order ID</span>,
-            accessor: 'id',
-            minWidth: 170,
-            getProps: (state, rowInfo, column) => {
-                return {
-                    style: {
-                        color: 'black',
-                    },
-                };
-            },
-        },
-        {
-            Header: props => <span style={{ color: 'black' }}>Name</span>,
-            accessor: 'name',
-            minWidth: 170,
-            getProps: (state, rowInfo, column) => {
-                return {
-                    style: {
-                        color: 'black',
-                    },
-                };
-            },
-        },
-        {
-            Header: props => <span style={{ color: 'black' }}>Price</span>,
-            accessor: 'price',
-            minWidth: 170,
-            getProps: (state, rowInfo, column) => {
-                return {
-                    style: {
-                        color: 'black',
-                    },
-                };
-            },
-        },
-        {
-            Header: props => <span style={{ color: 'black' }}>Product ID</span>,
-            accessor: 'product_id',
-            minWidth: 170,
-            getProps: (state, rowInfo, column) => {
-                return {
-                    style: {
-                        color: 'black',
-                    },
-                };
-            },
-        },
-        {
-            Header: props => <span style={{ color: 'black' }}>Quantity</span>,
-            accessor: 'quantity',
-            minWidth: 170,
-            getProps: (state, rowInfo, column) => {
-                return {
-                    style: {
-                        color: 'black',
-                    },
-                };
-            },
-        },
-        {
-            Header: props => <span style={{ color: 'black' }}>SKU</span>,
-            accessor: 'sku',
-            minWidth: 170,
-            getProps: (state, rowInfo, column) => {
-                return {
-                    style: {
-                        color: 'black',
-                    },
-                };
-            },
-        },
-        {
-            Header: props => <span style={{ color: 'black' }}>Sub Total</span>,
-            accessor: 'subtotal',
-            minWidth: 170,
-            getProps: (state, rowInfo, column) => {
-                return {
-                    style: {
-                        color: 'black',
-                    },
-                };
-            },
-        },
-        {
-            Header: props => <span style={{ color: 'black' }}>Sub Total Tax</span>,
-            accessor: 'subtotal_tax',
-            minWidth: 170,
-            getProps: (state, rowInfo, column) => {
-                return {
-                    style: {
-                        color: 'black',
-                    },
-                };
-            },
-        },
-        {
-            Header: props => <span style={{ color: 'black' }}>Tax Class</span>,
-            accessor: 'tax_class',
-            minWidth: 170,
-            getProps: (state, rowInfo, column) => {
-                return {
-                    style: {
-                        color: 'black',
-                    },
-                };
-            },
-        },
-        {
-            Header: props => <span style={{ color: 'black' }}>Total</span>,
-            accessor: 'total',
-            minWidth: 170,
-            getProps: (state, rowInfo, column) => {
-                return {
-                    style: {
-                        color: 'black',
-                    },
-                };
-            },
-        },
-        {
-            Header: props => <span style={{ color: 'black' }}>Total Tax</span>,
-            accessor: 'total_tax',
-            minWidth: 170,
-            getProps: (state, rowInfo, column) => {
-                return {
-                    style: {
-                        color: 'black',
-                    },
-                };
-            },
-        },
-        {
-            Header: props => <span style={{ color: 'black' }}>Variation ID</span>,
-            accessor: 'variation_id',
-            minWidth: 170,
-            getProps: (state, rowInfo, column) => {
-                return {
-                    style: {
-                        color: 'black',
-                    },
-                };
-            },
-        },
-        // {
-        //     Header: props => <span style={{ color: 'black' }}>Order ID</span>,
-        //     accessor: 'id',
-        //     minWidth: 170,
-        //     getProps: (state, rowInfo, column) => {
-        //         return {
-        //             style: {
-        //                 color: 'black',
-        //             },
-        //         };
-        //     },
-        // }
-
-    ]
-    function createData(id, name, price, product_id, quantity, sku, subtotal, subtotal_tax, tax_class, total, total_tax, variation_id) {
-        return {
-            id, name, price, product_id, quantity, sku, subtotal, subtotal_tax, tax_class, total, total_tax, variation_id
-        };
+    function createData(name, calories, fat, carbs, protein) {
+        return { name, calories, fat, carbs, protein };
     }
-    let rows = data && data.length ?
-        data.map(element => (
-            createData(
-                element.id,
-                element.name,
-                element.price,
-                element.product_id,
-                element.quantity,
-                element.sku,
-                element.subtotal,
-                element.tax_class,
 
-                element.total,
-                element.total_tax,
-                element.variation_id,
+    const rows = [
+        createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
+        createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+        createData('Eclair', 262, 16.0, 24, 6.0),
+        createData('Cupcake', 305, 3.7, 67, 4.3),
+        createData('Gingerbread', 356, 16.0, 49, 3.9),
+    ];
 
-            )
-        ))
-        : []
     return (
         <div>
             <Dialog fullScreen open={props.open} onClose={props.handleClose} TransitionComponent={Transition}>
@@ -228,23 +66,79 @@ export default function FullScreenDialog(props) {
                          </Typography>
                     </Toolbar>
                 </AppBar>
-                <ReactTable
-                    // ref={(refReactTable) => { this.refReactTable = refReactTable; }}
-                    data={rows}
-                    pages={data.length ? Math.ceil(data.length / 10) : 1}
-                    showPageSizeOptions={false}
-                    loading={false}
-                    sortable={false}
-                    filterable={false}
-                    overflow={"unset"}
-                    columns={columns}
-                    defaultPageSize={10}
-                    showPagination={true}
-                    showPaginationBottom
-                    showPaginationTop={false}
-                    className="-striped -highlight"
-                />
+                <TableContainer component={Paper}>
+                    <Table className={classes.table} aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Dessert (100g serving)</TableCell>
+                                <TableCell align="right">Calories</TableCell>
+                                <TableCell align="right">Fat&nbsp;(g)</TableCell>
+                                <TableCell align="right">Carbs&nbsp;(g)</TableCell>
+                                <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {rows.map((row) => (
+                                <TableRow key={row.name}>
+                                    <TableCell component="th" scope="row">
+                                        {row.name}
+                                    </TableCell>
+                                    <TableCell align="right">{row.calories}</TableCell>
+                                    <TableCell align="right">{row.fat}</TableCell>
+                                    <TableCell align="right">{row.carbs}</TableCell>
+                                    <TableCell align="right">{row.protein}</TableCell>
+                                </TableRow>
+                            ))}
+                            <TableRow >
+                                <TableCell colSpan="1">
+
+                                </TableCell>
+
+                                <TableCell align="right" colSpan="2"> Sub Total</TableCell>
+                                <TableCell align="right" colSpan="2">RESULT</TableCell>
+                            </TableRow>
+                            <TableRow >
+                                <TableCell colSpan="1">
+
+                                </TableCell>
+
+                                <TableCell align="right" colSpan="2">Discount</TableCell>
+                                <TableCell align="right" colSpan="2">RESULT</TableCell>
+                            </TableRow>
+                            <TableRow >
+                                <TableCell colSpan="1">
+
+                                </TableCell>
+
+                                <TableCell align="right" colSpan="2">GST</TableCell>
+                                <TableCell align="right" colSpan="2">RESULT</TableCell>
+                            </TableRow>
+                            <TableRow >
+                                <TableCell colSpan="1">
+
+                                </TableCell>
+
+                                <TableCell align="right" colSpan="2">Total</TableCell>
+                                <TableCell align="right" colSpan="2">RESULT</TableCell>
+                            </TableRow>
+                            <TableRow >
+                                <TableCell colSpan="1">
+
+                                </TableCell>
+
+                                <TableCell align="right" colSpan="2"><Button variant="filled">Place Order</Button></TableCell>
+
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </Dialog>
         </div>
     );
 }
+const mapStateToProps = state => {
+    return {
+        orders: state.orderedFoods
+    }
+}
+export default connect(mapStateToProps)(FullScreenDialog);

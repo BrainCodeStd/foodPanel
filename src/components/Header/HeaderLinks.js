@@ -27,6 +27,7 @@ import Badge from '@material-ui/core/Badge';
 import AssessmentIcon from '@material-ui/icons/Assessment';
 import { withRouter } from "react-router-dom";
 const useStyles = makeStyles(styles);
+import { connect } from "react-redux";
 import { drop_down } from "../../assets/constants/Drop"
 function HeaderLinks(props) {
   const classes = useStyles();
@@ -40,7 +41,7 @@ function HeaderLinks(props) {
     props.filterBy(val)
   };
   React.memo(() => props.cartCounter, [props.cartCounter])
-  console.log("AA", props.cartCounter)
+
   return (
     <List className={classes.list}>
       <ListItem className={classes.listItem}>
@@ -51,7 +52,7 @@ function HeaderLinks(props) {
           classes={{ tooltip: classes.tooltip }}
         >
           <Button
-            href="#"
+            onClick={props.fetchAll}
             color="transparent"
             className={classes.navLink}
           >
@@ -85,11 +86,11 @@ function HeaderLinks(props) {
           classes={{ tooltip: classes.tooltip }}
         >
           <Button
-            href="#"
+            onClick={props.openCart}
             color="transparent"
             className={classes.navLink}
           >
-            <Badge badgeContent={props.cartCounter ? props.cartCounter : 0} color="primary">
+            <Badge badgeContent={props.orders ? props.orders.length : 0} color="primary">
               <ShoppingCartIcon />
             </Badge>
           </Button>
@@ -146,4 +147,9 @@ function HeaderLinks(props) {
     </List>
   );
 }
-export default withRouter(HeaderLinks)
+const mapStateToProps = state => {
+  return {
+    orders: state.orderedFoods
+  }
+}
+export default connect(mapStateToProps)(withRouter(HeaderLinks)) 

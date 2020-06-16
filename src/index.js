@@ -11,11 +11,10 @@ import TrackOrder from "views/TrackOrder/TrackOrder"
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import thunk from 'redux-thunk';
-import rootReducer from "./store/reducers/index";
-import viewQuiz from "./store/reducers/ViewQuiz"
+import foodReducer from "./store/reducers/foodReducer"
 var hist = createBrowserHistory();
 axios.defaults.headers.common['Authorization'] = "Basic dGVzdEBnbWFpbC5jb20gdGVzdDEyMzp0ZXN0MTIzNDV0c3QxMjM=";
-const store = createStore(rootReducer, applyMiddleware(thunk));
+const store = createStore(foodReducer, applyMiddleware(thunk));
 ReactDOM.render(
   <Provider store={store}>
     <Router history={hist}>
