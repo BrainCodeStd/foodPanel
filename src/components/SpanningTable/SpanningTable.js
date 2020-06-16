@@ -7,6 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import TextField from '@material-ui/core/TextField';
 
 const TAX_RATE = 0.07;
 
@@ -16,73 +17,83 @@ const useStyles = makeStyles({
     },
 });
 
-function ccyFormat(num) {
-    return `${num.toFixed(2)}`;
-}
 
-function priceRow(qty, unit) {
-    return qty * unit;
-}
 
-function createRow(desc, qty, unit) {
-    const price = priceRow(qty, unit);
-    return { desc, qty, unit, price };
-}
-
-function subtotal(items) {
-    return items.map(({ price }) => price).reduce((sum, i) => sum + i, 0);
-}
-
-const rows = [
-    createRow('Paperclips (Box)', 100, 1.15),
-    createRow('Paper (Case)', 10, 45.99),
-    createRow('Waste Basket', 2, 17.99),
-];
-
-const invoiceSubtotal = subtotal(rows);
-const invoiceTaxes = TAX_RATE * invoiceSubtotal;
-const invoiceTotal = invoiceTaxes + invoiceSubtotal;
-
-export default function SpanningTable() {
+export default function SpanningTable(props) {
     const classes = useStyles();
+    console.log("REEE", props.data)
+    function createData(name, order_for, discount, amount) {
+        return { name, order_for, discount, amount };
+    }
 
+    const rows = props.data.hasOwnProperty("_id") && props.data.orderedFoods.length ?
+        props.data.orderedFoods.map((element) => {
+            return createData(element.name, element.serves, element.discount, element.amount)
+        })
+        : []
     return (
         <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="spanning table">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Food</TableCell>
-                        <TableCell align="right">Serves</TableCell>
-                        <TableCell align="right">Served For</TableCell>
-                        <TableCell align="right">Unit Price</TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell align="right">People</TableCell>
+                        <TableCell align="right">Discount</TableCell>
                         <TableCell align="right">Amount</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {rows.map((row) => (
-                        <TableRow key={row.desc}>
-                            <TableCell>{row.desc}</TableCell>
-                            <TableCell align="right">{row.qty}</TableCell>
-                            <TableCell align="right">{row.unit}</TableCell>
-                            <TableCell align="right">{row.unit}</TableCell>
-                            <TableCell align="right">{ccyFormat(row.price)}</TableCell>
+                        <TableRow key={row.name}>
+                            <TableCell component="th" scope="row">
+                                {row.name}
+                            </TableCell>
+                            <TableCell align="right">{row.order_for}</TableCell>
+                            <TableCell align="right">{row.discount}</TableCell>
+                            <TableCell align="right">{row.amount}</TableCell>
+                            <TableCell align="right">{row.action}</TableCell>
                         </TableRow>
                     ))}
 
-                    <TableRow>
 
-                        <TableCell rowSpan={3} />
-                        <TableCell colSpan={3}>Subtotal</TableCell>
-                        <TableCell align="right">{ccyFormat(invoiceSubtotal)}</TableCell>
+
+
+
+                    <TableRow >
+                        <TableCell colSpan="1">
+
+                        </TableCell>
+
+                        <TableCell align="right" colSpan="2">Discount</TableCell>
+                        <TableCell align="right" colSpan="2">{props.data.hasOwnProperty("_id") && props.data.discount ? props.data.discount : 0}</TableCell>
                     </TableRow>
-                    <TableRow>
-                        <TableCell>Tax</TableCell>
-                        <TableCell align="right">{`${(TAX_RATE * 100).toFixed(0)} %`}</TableCell>
-                        <TableCell align="right" colSpan={2}>{ccyFormat(invoiceTaxes)}</TableCell>
+                    <TableRow >
+                        <TableCell colSpan="1">
+
+                        </TableCell>
+
+                        <TableCell align="right" colSpan="2">Total served For</TableCell>
+                        <TableCell align="right" colSpan="2">{props.data.hasOwnProperty("_id") && props.data.NofPersons ? props.data.NofPersons : ""}</TableCell>
                     </TableRow>
-                    <TableRow>
-                        <TableCell colSpan={3}>Total</TableCell>
-                        <TableCell align="right">{ccyFormat(invoiceTotal)}</TableCell>
+                    <TableRow >
+                        <TableCell colSpan="1">
+
+                        </TableCell>
+
+                        <TableCell align="right" colSpan="2">Total</TableCell>
+                        <TableCell align="right" colSpan="2">{props.data.hasOwnProperty("_id") && props.data.totalPrice ? props.data.totalPrice : ""}</TableCell>
+                    </TableRow>
+                    <TableRow >
+                        <TableCell colSpan="1">
+
+                        </TableCell>
+
+                        <TableCell align="right" colSpan="4">
+                            <form noValidate autoComplete="off">
+                                <TextField value={props.data.hasOwnProperty("_id") && props.data.delivery.deliveryAddress ? props.data.delivery.deliveryAddress : ""} disabled id="outlined-basic" label="Enter Delivery Address" variant="outlined" multiline />
+                            </form>
+
+                        </TableCell>
                     </TableRow>
                 </TableBody>
             </Table>
