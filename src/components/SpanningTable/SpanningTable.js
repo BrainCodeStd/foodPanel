@@ -21,7 +21,6 @@ const useStyles = makeStyles({
 
 export default function SpanningTable(props) {
     const classes = useStyles();
-    console.log("REEE", props.data)
     function createData(name, order_for, discount, amount) {
         return { name, order_for, discount, amount };
     }
@@ -64,7 +63,7 @@ export default function SpanningTable(props) {
 
                         </TableCell>
 
-                        <TableCell align="right" colSpan="2">Discount</TableCell>
+                        <TableCell align="right" colSpan="1">Discount</TableCell>
                         <TableCell align="right" colSpan="2">{props.data.hasOwnProperty("_id") && props.data.discount ? props.data.discount : 0}</TableCell>
                     </TableRow>
                     <TableRow >
@@ -72,7 +71,7 @@ export default function SpanningTable(props) {
 
                         </TableCell>
 
-                        <TableCell align="right" colSpan="2">Total served For</TableCell>
+                        <TableCell align="right" colSpan="1">Total served For</TableCell>
                         <TableCell align="right" colSpan="2">{props.data.hasOwnProperty("_id") && props.data.NofPersons ? props.data.NofPersons : ""}</TableCell>
                     </TableRow>
                     <TableRow >
@@ -80,17 +79,14 @@ export default function SpanningTable(props) {
 
                         </TableCell>
 
-                        <TableCell align="right" colSpan="2">Total</TableCell>
+                        <TableCell align="right" colSpan="1">Total</TableCell>
                         <TableCell align="right" colSpan="2">{props.data.hasOwnProperty("_id") && props.data.totalPrice ? props.data.totalPrice : ""}</TableCell>
                     </TableRow>
                     <TableRow >
-                        <TableCell colSpan="1">
+                        <TableCell align="center" colSpan="4">
 
-                        </TableCell>
-
-                        <TableCell align="right" colSpan="4">
-                            <form noValidate autoComplete="off">
-                                <TextField value={props.data.hasOwnProperty("_id") && props.data.delivery.deliveryAddress ? props.data.delivery.deliveryAddress : ""} disabled id="outlined-basic" label="Enter Delivery Address" variant="outlined" multiline />
+                            <form noValidate autoComplete="off" style={{ width: "100%" }}>
+                                <TextField style={{ width: "100%" }} value={props.data.hasOwnProperty("_id") && props.data.delivery.deliveryAddress ? props.data.delivery.deliveryAddress : ""} disabled id="outlined-basic" label="Enter Delivery Address" variant="outlined" multiline />
                             </form>
 
                         </TableCell>

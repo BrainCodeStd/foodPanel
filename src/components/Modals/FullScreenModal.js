@@ -52,8 +52,8 @@ function FullScreenDialog(props) {
     }
 
     const rows = props.orders && props.orders.length ?
-        props.orders.map((element) => {
-            return createData(element.name, element.serves, element.discount, element.amount, <Button color="secondary" variant="filled" >x</Button >)
+        props.orders.map((element, i) => {
+            return createData(element.name, element.serves, element.discount, element.amount, <Button variant="contained" color="secondary" style={{ padding: "10px" }} onClick={() => props.remove({ index: i, total: element.amount, discount: element.discount, people: element.serves })}>x</Button >)
         })
         : []
     //onClick={() => props.remove(element.food_id)}
@@ -71,7 +71,6 @@ function FullScreenDialog(props) {
             amountPayed: true
         }
         createOrder(payload).then(res => {
-            console.log(res.data);
             props.handleClose();
             props.empty()
         })
@@ -113,10 +112,6 @@ function FullScreenDialog(props) {
                                     <TableCell align="right">{row.action}</TableCell>
                                 </TableRow>
                             ))}
-
-
-
-
                             <TableRow >
                                 <TableCell colSpan="1">
 
@@ -161,9 +156,6 @@ function FullScreenDialog(props) {
 
                                 </TableCell>
                             </TableRow>
-
-
-
                             <TableRow >
                                 <TableCell colSpan="3">
 

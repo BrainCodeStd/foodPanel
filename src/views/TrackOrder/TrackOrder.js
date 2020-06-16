@@ -316,9 +316,14 @@ export default function LandingPage(props) {
                         >
                             <center>
                                 <Stepper style={{ "width": "1073px" }} alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
-                                    {steps.map((label) => (
+                                    {steps.map((label, i) => (
                                         <Step key={label}>
-                                            <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
+                                            {i === 1 ?
+                                                <StepLabel StepIconComponent={ColorlibStepIcon}>{result.hasOwnProperty("_id") ? `Your Order is preparing & will be delivered within ${result.duration} hrs` : label}</StepLabel>
+                                                :
+                                                <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
+
+                                            }
                                         </Step>
                                     ))}
                                 </Stepper>

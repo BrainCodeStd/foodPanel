@@ -20,10 +20,10 @@ const reducer = (state = initialState, action) => {
         case actionTypes.REMOVE_FROM_CART:
             return {
                 ...state,
-                orderedFoods: state.orderedFoods.filter(order => order.food_id !== action.payload),
+                orderedFoods: state.orderedFoods.filter((order, i) => i !== action.payload.index),
                 total: state.total - action.payload.total,
-                discount: state.discount + action.payload.discount,
-                people: state.people + action.payload.people
+                discount: state.discount - action.payload.discount,
+                people: state.people - action.payload.people
 
             }
         case actionTypes.EMPTY_CART:

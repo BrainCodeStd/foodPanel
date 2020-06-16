@@ -42,6 +42,7 @@ function SectionLogin(props) {
             discount: props.data.menu.discount,
             people: +serve
         }
+        setServe("")
         props.addOrder(payload);
 
     }
@@ -63,11 +64,13 @@ function SectionLogin(props) {
                             }
                             <h4 >{props.data && props.data.menu.foodName}</h4>
                             <p>It serves {props.data && props.data.menu.serves} persons</p>
+                            <p>{props.data && props.data.menu.price} RS/-</p>
                             <GridContainer justify="center">
                                 <GridItem xs={12} sm={12} md={6}>
                                     <form>
                                         <TextField
                                             error={error}
+                                            value={serve}
                                             onChange={(e) => setServe(e.target.value)}
                                             id="standard-number"
                                             label="Serving"
