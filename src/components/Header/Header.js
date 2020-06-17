@@ -15,10 +15,10 @@ import Drawer from "@material-ui/core/Drawer";
 import Menu from "@material-ui/icons/Menu";
 // core components
 import styles from "assets/jss/material-kit-react/components/headerStyle.js";
-
+import { withRouter } from "react-router-dom"
 const useStyles = makeStyles(styles);
 
-export default function Header(props) {
+function Header(props) {
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   React.useEffect(() => {
@@ -62,7 +62,6 @@ export default function Header(props) {
   });
   const brandComponent = <Button className={classes.title} onClick={() => {
     props.history.push("/")
-    props.fetchToday()
   }}>{brand}</Button>;
   return (
     <AppBar className={appBarClasses}>
@@ -152,3 +151,4 @@ Header.propTypes = {
     ]).isRequired
   })
 };
+export default withRouter(Header)

@@ -10,9 +10,14 @@ export const getAllMenu = async (params) => {
     return await resolve(axios.get(`${apiBaseUrl}/getAllMenu`)
         .then(res => res.data));
 }
-export const login = async (body) => {
-    return await resolve(axios.post(`${apiBaseUrl}/login`, body)
+export const trackOrder = async (params) => {
+    return await resolve(axios.get(`${apiBaseUrl}/trackOrder/${params.orderID}`)
         .then(res => res.data));
 }
+export const createOrder = async (body) => {
+    return await resolve(axios.post(`${apiBaseUrl}/createOrder`, body)
+        .then(res => res.data));
+}
+
 // https://foodxwood.herokuapp.com/api
-//
+//"http://localhost:5001/api"

@@ -1,9 +1,5 @@
-// import * as API from "../../api/api";
-export const addTodo = text => ({
-  type: 'ADD_TODO',
-  id: 1,
-  text
-})
+import * as API from "../../api/api";
+
 
 // export const create_quiz = data => {
 //   return dispatch => {
@@ -25,13 +21,13 @@ export const addTodo = text => ({
 //     }
 //   };
 // };
-// export const get_SubjectData = params => {
-//   return dispatch => {
-//     try {
-//       let response = API.getSubjectInfo(params);
-//       return response;
-//     } catch (err) {
-//       return err;
-//     }
-//   };
-// };
+export const get_SubjectData = params => {
+  return dispatch => {
+    try {
+      let response = API.getAllMenu();
+      return response;
+    } catch (err) {
+      return err;
+    }
+  };
+};

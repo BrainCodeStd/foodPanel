@@ -42,7 +42,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import VideoLabelIcon from '@material-ui/icons/VideoLabel';
 import StepConnector from '@material-ui/core/StepConnector';
-
+import { trackOrder } from "../../api/api"
 
 const useQontoStepIconStyles = makeStyles({
     root: {
@@ -209,7 +209,11 @@ function getStepContent(step) {
 
 export default function LandingPage(props) {
     const [cardAnimaton, setCardAnimation] = React.useState("cardHidden");
-    const [activeStep, setActiveStep] = React.useState(3);
+    const [activeStep, setActiveStep] = React.useState(-1);
+    const [id, setId] = React.useState("")
+    const [result, setResult] = React.useState({})
+    const [expansion, setExpansion] = React.useState(true)
+
     const classes = useStyles();
     const { ...rest } = props;
     setTimeout(function () {
@@ -230,7 +234,19 @@ export default function LandingPage(props) {
     const handleReset = () => {
         setActiveStep(0);
     };
-
+    const findOrder = () => {
+        if (!id.length) return true
+        let params = {
+            orderID: id
+        }
+        trackOrder(params).then(res => {
+            setResult(res.data && res.data)
+            setActiveStep(res.data ? res.data.duration > 0 ? 1 : 2 : -1)
+            setExpansion(res.data.hasOwnProperty("_id") ? false : true)
+            console.log(res.data);
+        })
+    }
+    console.log(activeStep);
     return (
         <div>
             <Header
@@ -266,11 +282,11 @@ export default function LandingPage(props) {
                                         <CustomInput
                                             labelText="Enter Order Number"
                                             id="orderNo"
-                                            value={""}
+                                            value={id}
                                             formControlProps={{
                                                 fullWidth: true
                                             }}
-                                            onChange={(e) => console.log(e.target.value)}
+                                            onChange={(e) => setId(e.target.value)}
                                             inputProps={{
                                                 type: "text",
                                                 endAdornment: (
@@ -283,8 +299,8 @@ export default function LandingPage(props) {
 
                                     </CardBody>
                                     <CardFooter className={classes.cardFooter}>
-                                        <Button color="primary" size="lg">
-                                            Login
+                                        <Button color="primary" size="lg" onClick={findOrder}>
+                                            Find Order
                     </Button>
                                     </CardFooter>
                                 </form>
@@ -292,7 +308,7 @@ export default function LandingPage(props) {
 
                         </GridItem>
                     </GridContainer>
-                    <ExpansionPanel>
+                    <ExpansionPanel >
                         <ExpansionPanelSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="panel1a-content"
@@ -300,16 +316,21 @@ export default function LandingPage(props) {
                         >
                             <center>
                                 <Stepper style={{ "width": "1073px" }} alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
-                                    {steps.map((label) => (
+                                    {steps.map((label, i) => (
                                         <Step key={label}>
-                                            <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
+                                            {i === 1 ?
+                                                <StepLabel StepIconComponent={ColorlibStepIcon}>{result.hasOwnProperty("_id") && result.duration > 0 ? `Your Order is preparing & will be delivered within ${result.duration} hrs` : label}</StepLabel>
+                                                :
+                                                <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
+
+                                            }
                                         </Step>
                                     ))}
                                 </Stepper>
                             </center>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
-                            <SpanningTable />
+                            <SpanningTable data={result} />
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
 

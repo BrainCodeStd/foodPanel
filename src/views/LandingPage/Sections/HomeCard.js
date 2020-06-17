@@ -31,16 +31,22 @@ function SectionLogin(props) {
         let forServingAmount = serve / props.data.menu.serves;
         let amount = forServingAmount * (+props.data.menu.price)
         let payload = {
-            food_id: props.data.menu._id,
-            name: props.data.menu.foodName,
-            serves: serve,
-            amount: amount,
-            discount: props.data.menu.discount
+            order: {
+                food_id: props.data.menu._id,
+                name: props.data.menu.foodName,
+                serves: serve,
+                amount: amount,
+                discount: props.data.menu.discount
+            },
+            total: amount,
+            discount: props.data.menu.discount,
+            people: +serve
         }
+        setServe("")
         props.addOrder(payload);
 
     }
-    console.log(props.orders)
+    console.log(props.orders, props.total, props.people);
     return (
         <div>
             <div >
@@ -58,11 +64,13 @@ function SectionLogin(props) {
                             }
                             <h4 >{props.data && props.data.menu.foodName}</h4>
                             <p>It serves {props.data && props.data.menu.serves} persons</p>
+                            <p>{props.data && props.data.menu.price} RS/-</p>
                             <GridContainer justify="center">
                                 <GridItem xs={12} sm={12} md={6}>
                                     <form>
                                         <TextField
                                             error={error}
+                                            value={serve}
                                             onChange={(e) => setServe(e.target.value)}
                                             id="standard-number"
                                             label="Serving"
@@ -86,7 +94,9 @@ function SectionLogin(props) {
 }
 const mapStateToProps = state => {
     return {
-        orders: state.orderedFoods
+        orders: state.orderedFoods,
+        total: state.total,
+        people: state.people
     }
 }
 const mapDispatchToProps = dispatch => {

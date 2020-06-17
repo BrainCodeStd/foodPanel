@@ -23,6 +23,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { connect } from 'react-redux';
+import * as actionTypes from "../../store/actionConstants/index";
+import { createOrder } from "../../api/api"
+import Icon from '@material-ui/core/Icon';
+import TextField from '@material-ui/core/TextField';
 const useStyles = makeStyles((theme) => ({
     appBar: {
         position: 'relative',
@@ -39,22 +43,41 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function FullScreenDialog(props) {
+    const [stotal, setStotal] = React.useState(0)
+    const [address, setAddress] = React.useState("")
     const classes = useStyles();
     let { data } = props;
-    function createData(name, calories, fat, carbs, protein) {
-        return { name, calories, fat, carbs, protein };
+    function createData(name, order_for, discount, amount, action) {
+        return { name, order_for, discount, amount, action };
     }
 
-    const rows = [
-        createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-        createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-        createData('Eclair', 262, 16.0, 24, 6.0),
-        createData('Cupcake', 305, 3.7, 67, 4.3),
-        createData('Gingerbread', 356, 16.0, 49, 3.9),
-    ];
-
+    const rows = props.orders && props.orders.length ?
+        props.orders.map((element, i) => {
+            return createData(element.name, element.serves, element.discount, element.amount, <Button variant="contained" color="secondary" style={{ padding: "10px" }} onClick={() => props.remove({ index: i, total: element.amount, discount: element.discount, people: element.serves })}>x</Button >)
+        })
+        : []
+    //onClick={() => props.remove(element.food_id)}
+    const createOrders = () => {
+        let payload = {
+            orderedFoods: props.orders,
+            totalPrice: props.total - props.discount,
+            NofPersons: props.people,
+            discount: props.discount,
+            delivery: {
+                deliveryAddress: address,
+                deliveryCharges: 0
+            },
+            gst: 0,
+            amountPayed: true
+        }
+        createOrder(payload).then(res => {
+            props.handleClose();
+            props.empty()
+        })
+    }
     return (
         <div>
+
             <Dialog fullScreen open={props.open} onClose={props.handleClose} TransitionComponent={Transition}>
                 <AppBar className={classes.appBar}>
                     <Toolbar>
@@ -70,11 +93,11 @@ function FullScreenDialog(props) {
                     <Table className={classes.table} aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <TableCell>Dessert (100g serving)</TableCell>
-                                <TableCell align="right">Calories</TableCell>
-                                <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                                <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                                <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                                <TableCell>Name</TableCell>
+                                <TableCell align="right">People</TableCell>
+                                <TableCell align="right">Discount</TableCell>
+                                <TableCell align="right">Amount</TableCell>
+                                <TableCell align="right">Action</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -83,10 +106,10 @@ function FullScreenDialog(props) {
                                     <TableCell component="th" scope="row">
                                         {row.name}
                                     </TableCell>
-                                    <TableCell align="right">{row.calories}</TableCell>
-                                    <TableCell align="right">{row.fat}</TableCell>
-                                    <TableCell align="right">{row.carbs}</TableCell>
-                                    <TableCell align="right">{row.protein}</TableCell>
+                                    <TableCell align="right">{row.order_for}</TableCell>
+                                    <TableCell align="right">{row.discount}</TableCell>
+                                    <TableCell align="right">{row.amount}</TableCell>
+                                    <TableCell align="right">{row.action}</TableCell>
                                 </TableRow>
                             ))}
                             <TableRow >
@@ -95,7 +118,7 @@ function FullScreenDialog(props) {
                                 </TableCell>
 
                                 <TableCell align="right" colSpan="2"> Sub Total</TableCell>
-                                <TableCell align="right" colSpan="2">RESULT</TableCell>
+                                <TableCell align="right" colSpan="2">{props.total}</TableCell>
                             </TableRow>
                             <TableRow >
                                 <TableCell colSpan="1">
@@ -103,15 +126,15 @@ function FullScreenDialog(props) {
                                 </TableCell>
 
                                 <TableCell align="right" colSpan="2">Discount</TableCell>
-                                <TableCell align="right" colSpan="2">RESULT</TableCell>
+                                <TableCell align="right" colSpan="2">{props.discount}</TableCell>
                             </TableRow>
                             <TableRow >
                                 <TableCell colSpan="1">
 
                                 </TableCell>
 
-                                <TableCell align="right" colSpan="2">GST</TableCell>
-                                <TableCell align="right" colSpan="2">RESULT</TableCell>
+                                <TableCell align="right" colSpan="2">Total served For</TableCell>
+                                <TableCell align="right" colSpan="2">{props.people}</TableCell>
                             </TableRow>
                             <TableRow >
                                 <TableCell colSpan="1">
@@ -119,14 +142,36 @@ function FullScreenDialog(props) {
                                 </TableCell>
 
                                 <TableCell align="right" colSpan="2">Total</TableCell>
-                                <TableCell align="right" colSpan="2">RESULT</TableCell>
+                                <TableCell align="right" colSpan="2">{props.total - props.discount}</TableCell>
                             </TableRow>
                             <TableRow >
                                 <TableCell colSpan="1">
 
                                 </TableCell>
 
-                                <TableCell align="right" colSpan="2"><Button variant="filled">Place Order</Button></TableCell>
+                                <TableCell align="right" colSpan="4">
+                                    <form noValidate autoComplete="off">
+                                        <TextField onChange={(e) => setAddress(e.target.value)} id="outlined-basic" label="Enter Delivery Address" variant="outlined" multiline />
+                                    </form>
+
+                                </TableCell>
+                            </TableRow>
+                            <TableRow >
+                                <TableCell colSpan="3">
+
+                                </TableCell>
+
+                                <TableCell align="right" colSpan="2">
+                                    <Button variant="contained"
+                                        color="primary"
+                                        className={classes.button}
+                                        endIcon={<Icon>send</Icon>}
+                                        onClick={() => {
+                                            alert("Your order placed")
+                                            createOrders()
+
+                                        }
+                                        }>Place Order</Button></TableCell>
 
                             </TableRow>
                         </TableBody>
@@ -138,7 +183,16 @@ function FullScreenDialog(props) {
 }
 const mapStateToProps = state => {
     return {
-        orders: state.orderedFoods
+        orders: state.orderedFoods,
+        total: state.total,
+        discount: state.discount,
+        people: state.people
     }
 }
-export default connect(mapStateToProps)(FullScreenDialog);
+const mapDispatchToProps = dispatch => {
+    return {
+        remove: (payload) => dispatch({ type: actionTypes.REMOVE_FROM_CART, payload: payload }),
+        empty: () => dispatch({ type: actionTypes.EMPTY_CART, payload: { order: [], total: 0, discount: 0, people: 0 } })
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(FullScreenDialog);
