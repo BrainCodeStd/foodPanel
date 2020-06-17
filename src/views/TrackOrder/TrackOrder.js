@@ -241,7 +241,7 @@ export default function LandingPage(props) {
         }
         trackOrder(params).then(res => {
             setResult(res.data && res.data)
-            setActiveStep(res.data && res.data.duration > 0 ? 1 : 2)
+            setActiveStep(res.data ? res.data.duration > 0 ? 1 : 2 : -1)
             setExpansion(res.data.hasOwnProperty("_id") ? false : true)
             console.log(res.data);
         })
