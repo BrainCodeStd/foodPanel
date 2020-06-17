@@ -43,7 +43,8 @@ import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import VideoLabelIcon from '@material-ui/icons/VideoLabel';
 import StepConnector from '@material-ui/core/StepConnector';
 import { trackOrder } from "../../api/api"
-
+import * as actionTypes from "../../store/actionConstants"
+import { connect } from "react-redux";
 const useQontoStepIconStyles = makeStyles({
     root: {
         color: '#eaeaf0',
@@ -207,7 +208,7 @@ function getStepContent(step) {
     }
 }
 
-export default function LandingPage(props) {
+function LandingPage(props) {
     const [cardAnimaton, setCardAnimation] = React.useState("cardHidden");
     const [activeStep, setActiveStep] = React.useState(-1);
     const [id, setId] = React.useState("")
@@ -239,14 +240,12 @@ export default function LandingPage(props) {
         let params = {
             orderID: id
         }
-        trackOrder(params).then(res => {
-            setResult(res.data && res.data)
-            setActiveStep(res.data ? res.data.duration > 0 ? 1 : 2 : -1)
-            setExpansion(res.data.hasOwnProperty("_id") ? false : true)
-            console.log(res.data);
-        })
+        props.track(id)
+        setResult(props.orderTrack)
+        setActiveStep(props.orderTrack ? props.orderTrack.duration > 0 ? 1 : 2 : -1)
+        console.log(props.orderTrack);
+
     }
-    console.log(activeStep);
     return (
         <div>
             <Header
@@ -315,11 +314,11 @@ export default function LandingPage(props) {
                             id="panel1a-header"
                         >
                             <center>
-                                <Stepper style={{ "width": "1073px" }} alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
+                                <Stepper style={{ "width": "1073px" }} alternativeLabel activeStep={props.orderTrack.duration > 0 ? 1 : 2} connector={<ColorlibConnector />}>
                                     {steps.map((label, i) => (
                                         <Step key={label}>
                                             {i === 1 ?
-                                                <StepLabel StepIconComponent={ColorlibStepIcon}>{result.hasOwnProperty("_id") && result.duration > 0 ? `Your Order is preparing & will be delivered within ${result.duration} hrs` : label}</StepLabel>
+                                                <StepLabel StepIconComponent={ColorlibStepIcon}>{props.orderTrack.duration > 0 ? `Your Order is preparing & will be delivered within ${props.orderTrack.duration} hrs` : label}</StepLabel>
                                                 :
                                                 <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
 
@@ -330,7 +329,7 @@ export default function LandingPage(props) {
                             </center>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
-                            <SpanningTable data={result} />
+                            <SpanningTable />
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
 
@@ -341,3 +340,18 @@ export default function LandingPage(props) {
         </div>
     );
 }
+const mapStateToProps = state => {
+    return {
+        orderTrack: state.orderTrack
+    }
+}
+const mapDispatchToProps = dispatch => {
+    return {
+        track: (payload) => dispatch({ type: actionTypes.TRACK_ORDER, payload: payload }),
+
+        // create: (payload) => dispatch({ type: actionTypes.CREATE_ORDER, payload: payload }),
+        // remove: (payload) => dispatch({ type: actionTypes.REMOVE_FROM_CART, payload: payload }),
+        // empty: () => dispatch({ type: actionTypes.EMPTY_CART, payload: { order: [], total: 0, discount: 0, people: 0 } })
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(LandingPage)

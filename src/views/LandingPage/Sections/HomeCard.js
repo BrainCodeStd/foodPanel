@@ -46,7 +46,7 @@ function SectionLogin(props) {
         props.addOrder(payload);
 
     }
-    console.log(props.orders, props.total, props.people);
+    console.log(props);
     return (
         <div>
             <div >

@@ -27,6 +27,7 @@ import * as actionTypes from "../../store/actionConstants/index";
 import { createOrder } from "../../api/api"
 import Icon from '@material-ui/core/Icon';
 import TextField from '@material-ui/core/TextField';
+import moment from "moment"
 const useStyles = makeStyles((theme) => ({
     appBar: {
         position: 'relative',
@@ -57,8 +58,11 @@ function FullScreenDialog(props) {
         })
         : []
     //onClick={() => props.remove(element.food_id)}
-    const createOrders = () => {
+    const createOrders = () => 
+    {
+        let men = [];
         let payload = {
+            OID:Math.floor((Math.random() * 100) + 1),
             orderedFoods: props.orders,
             totalPrice: props.total - props.discount,
             NofPersons: props.people,
@@ -68,12 +72,28 @@ function FullScreenDialog(props) {
                 deliveryCharges: 0
             },
             gst: 0,
-            amountPayed: true
+            amountPayed: true,
+            deliverIn: moment().add(5, "hours")
         }
-        createOrder(payload).then(res => {
-            props.handleClose();
-            props.empty()
-        })
+        props.orders.forEach(element => {
+            props.menu.forEach(ele => {
+                if (element.food_id === ele._id) {
+                    men.push(ele);
+                }
+            })
+        });
+
+
+
+        props.createOrderedMenu(men)
+        props.create(payload)
+        alert(`Your order placed with order ID ${payload.OID}`)
+        props.handleClose();
+        props.empty()
+        // createOrder(payload).then(res => {
+        //     props.handleClose();
+        //     props.empty()
+        // })
     }
     return (
         <div>
@@ -167,7 +187,7 @@ function FullScreenDialog(props) {
                                         className={classes.button}
                                         endIcon={<Icon>send</Icon>}
                                         onClick={() => {
-                                            alert("Your order placed")
+                                          
                                             createOrders()
 
                                         }
@@ -186,11 +206,15 @@ const mapStateToProps = state => {
         orders: state.orderedFoods,
         total: state.total,
         discount: state.discount,
-        people: state.people
+        people: state.people,
+        menu: state.menu
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
+        createOrderedMenu: (payload) => dispatch({ type: actionTypes.CREATE_ORDERED_MENU, payload: payload }),
+
+        create: (payload) => dispatch({ type: actionTypes.CREATE_ORDER, payload: payload }),
         remove: (payload) => dispatch({ type: actionTypes.REMOVE_FROM_CART, payload: payload }),
         empty: () => dispatch({ type: actionTypes.EMPTY_CART, payload: { order: [], total: 0, discount: 0, people: 0 } })
     }

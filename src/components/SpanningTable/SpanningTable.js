@@ -8,7 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
-
+import { connect } from "react-redux";
 const TAX_RATE = 0.07;
 
 const useStyles = makeStyles({
@@ -19,14 +19,14 @@ const useStyles = makeStyles({
 
 
 
-export default function SpanningTable(props) {
+function SpanningTable(props) {
     const classes = useStyles();
     function createData(name, order_for, discount, amount) {
         return { name, order_for, discount, amount };
     }
-
-    const rows = props.data.hasOwnProperty("_id") && props.data.orderedFoods.length ?
-        props.data.orderedFoods.map((element) => {
+console.log(props.orderTrack)
+    const rows = props.orderTrack.hasOwnProperty("OID") && props.orderTrack.orderedFoods.length ?
+        props.orderTrack.orderedFoods.map((element) => {
             return createData(element.name, element.serves, element.discount, element.amount)
         })
         : []
@@ -64,7 +64,7 @@ export default function SpanningTable(props) {
                         </TableCell>
 
                         <TableCell align="right" colSpan="1">Discount</TableCell>
-                        <TableCell align="right" colSpan="2">{props.data.hasOwnProperty("_id") && props.data.discount ? props.data.discount : 0}</TableCell>
+                        <TableCell align="right" colSpan="2">{props.orderTrack.hasOwnProperty("OID") && props.orderTrack.discount ? props.orderTrack.discount : 0}</TableCell>
                     </TableRow>
                     <TableRow >
                         <TableCell colSpan="1">
@@ -72,7 +72,7 @@ export default function SpanningTable(props) {
                         </TableCell>
 
                         <TableCell align="right" colSpan="1">Total served For</TableCell>
-                        <TableCell align="right" colSpan="2">{props.data.hasOwnProperty("_id") && props.data.NofPersons ? props.data.NofPersons : ""}</TableCell>
+                        <TableCell align="right" colSpan="2">{props.orderTrack.hasOwnProperty("OID") && props.orderTrack.NofPersons ? props.orderTrack.NofPersons : ""}</TableCell>
                     </TableRow>
                     <TableRow >
                         <TableCell colSpan="1">
@@ -80,13 +80,13 @@ export default function SpanningTable(props) {
                         </TableCell>
 
                         <TableCell align="right" colSpan="1">Total</TableCell>
-                        <TableCell align="right" colSpan="2">{props.data.hasOwnProperty("_id") && props.data.totalPrice ? props.data.totalPrice : ""}</TableCell>
+                        <TableCell align="right" colSpan="2">{props.orderTrack.hasOwnProperty("OID") && props.orderTrack.totalPrice ? props.orderTrack.totalPrice : ""}</TableCell>
                     </TableRow>
                     <TableRow >
                         <TableCell align="center" colSpan="4">
 
                             <form noValidate autoComplete="off" style={{ width: "100%" }}>
-                                <TextField style={{ width: "100%" }} value={props.data.hasOwnProperty("_id") && props.data.delivery.deliveryAddress ? props.data.delivery.deliveryAddress : ""} disabled id="outlined-basic" label="Enter Delivery Address" variant="outlined" multiline />
+                                <TextField style={{ width: "100%" }} value={props.orderTrack.hasOwnProperty("_id") && props.orderTrack.delivery.deliveryAddress ? props.orderTrack.delivery.deliveryAddress : ""} disabled id="outlined-basic" label="Enter Delivery Address" variant="outlined" multiline />
                             </form>
 
                         </TableCell>
@@ -96,3 +96,9 @@ export default function SpanningTable(props) {
         </TableContainer>
     );
 }
+const mapStateToProps = state => {
+    return {
+        orderTrack: state.orderTrack
+    }
+}
+export default connect(mapStateToProps)(SpanningTable)
