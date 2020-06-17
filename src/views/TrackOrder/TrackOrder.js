@@ -241,7 +241,7 @@ export default function LandingPage(props) {
         }
         trackOrder(params).then(res => {
             setResult(res.data && res.data)
-            setActiveStep(res.data && res.data.duration ? 1 : 2)
+            setActiveStep(res.data && res.data.duration > 0 ? 1 : 2)
             setExpansion(res.data.hasOwnProperty("_id") ? false : true)
             console.log(res.data);
         })
@@ -319,7 +319,7 @@ export default function LandingPage(props) {
                                     {steps.map((label, i) => (
                                         <Step key={label}>
                                             {i === 1 ?
-                                                <StepLabel StepIconComponent={ColorlibStepIcon}>{result.hasOwnProperty("_id") ? `Your Order is preparing & will be delivered within ${result.duration} hrs` : label}</StepLabel>
+                                                <StepLabel StepIconComponent={ColorlibStepIcon}>{result.hasOwnProperty("_id") && result.duration > 0 ? `Your Order is preparing & will be delivered within ${result.duration} hrs` : label}</StepLabel>
                                                 :
                                                 <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
 
