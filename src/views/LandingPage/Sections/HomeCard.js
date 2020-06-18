@@ -1,12 +1,6 @@
 import React, { useState } from "react";
-// @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import Icon from "@material-ui/core/Icon";
-// @material-ui/icons
-import People from "@material-ui/icons/People";
-import Email from "@material-ui/icons/Email";
-// core components
+
 import TextField from '@material-ui/core/TextField';
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
@@ -14,7 +8,7 @@ import Button from "components/CustomButtons/Button.js";
 
 import styles from "assets/jss/material-kit-react/views/componentsSections/loginStyle.js";
 import "./Section.css"
-import { addTodo } from "../../../store/actions"
+
 import * as actionTypes from "../../../store/actionConstants/index";
 import { connect } from 'react-redux'
 const useStyles = makeStyles(styles);
@@ -30,6 +24,9 @@ function SectionLogin(props) {
         }
         let forServingAmount = serve / props.data.menu.serves;
         let amount = forServingAmount * (+props.data.menu.price)
+        if (+props.data.menu.discount) {
+            amount = amount - ((+amount * +props.data.menu.discount) / 100);
+        }
         let payload = {
             order: {
                 food_id: props.data.menu._id,

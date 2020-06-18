@@ -1,5 +1,6 @@
 import * as actionTypes from "../actionConstants/index"
 import moment from "moment"
+import _ from "lodash"
 const initialState = {
     orderedFoods: [],
     total: 0,
@@ -133,7 +134,6 @@ const reducer = (state = initialState, action) => {
         case actionTypes.TRACK_ORDER:
             let abc = {};
             state.orders.forEach(element => {
-                console.log(element,action.payload)
                 if (element.OID === +action.payload) {
                     let duration = moment.duration(element.deliverIn.diff(moment()));
                     element.duration = duration.asHours();
@@ -142,7 +142,7 @@ const reducer = (state = initialState, action) => {
             })
             return {
                 ...state,
-                orderTrack:abc
+                orderTrack: abc
 
             }
         case actionTypes.CREATE_ORDER:
@@ -154,7 +154,7 @@ const reducer = (state = initialState, action) => {
         case actionTypes.CREATE_ORDERED_MENU:
             return {
                 ...state,
-                orderedMenu: [...state.orderedMenu, ...action.payload],
+                orderedMenu: [...state.orderedMenu, ..._.uniq(action.payload, '_id')],
 
             }
         case actionTypes.ADD_TO_CART:

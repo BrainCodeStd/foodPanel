@@ -44,7 +44,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function FullScreenDialog(props) {
-    const [stotal, setStotal] = React.useState(0)
+    const [error, setError] = React.useState(false)
     const [address, setAddress] = React.useState("")
     const classes = useStyles();
     let { data } = props;
@@ -58,11 +58,14 @@ function FullScreenDialog(props) {
         })
         : []
     //onClick={() => props.remove(element.food_id)}
-    const createOrders = () => 
-    {
+    const createOrders = () => {
+        if (!address.length) {
+            setError(true)
+            return
+        }
         let men = [];
         let payload = {
-            OID:Math.floor((Math.random() * 100) + 1),
+            OID: Math.floor((Math.random() * 100) + 1),
             orderedFoods: props.orders,
             totalPrice: props.total - props.discount,
             NofPersons: props.people,
@@ -171,7 +174,7 @@ function FullScreenDialog(props) {
 
                                 <TableCell align="right" colSpan="4">
                                     <form noValidate autoComplete="off">
-                                        <TextField onChange={(e) => setAddress(e.target.value)} id="outlined-basic" label="Enter Delivery Address" variant="outlined" multiline />
+                                        <TextField error={error} onChange={(e) => setAddress(e.target.value)} id="outlined-basic" label="Enter Delivery Address" variant="outlined" multiline />
                                     </form>
 
                                 </TableCell>
@@ -187,7 +190,7 @@ function FullScreenDialog(props) {
                                         className={classes.button}
                                         endIcon={<Icon>send</Icon>}
                                         onClick={() => {
-                                          
+
                                             createOrders()
 
                                         }
